@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation index{% endblock %}
+
+{% block body %}
+    <h1>Liste des reservations</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th>Prix Total</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ reservation.endedAt ? reservation.endedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ reservation.prixTotal }} €</td>
+                <td>{{ reservation.status }}</td>
+                <td>
+                    <a href="{{ path('app_reservation_show', {'id': reservation.id}) }}" class="btn btn-primary">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-primary">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucune réservation à ce jour</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">Ajouter une nouvelle réservation</a>
+    {% endif %}
+{% endblock %}

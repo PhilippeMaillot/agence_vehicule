@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commentaire{% endblock %}
+
+{% block body %}
+    <h1>Commentaire</h1>
+
+    <table class="table">
+    <tbody>
+        <tr>
+            <th>Contenu</th>
+            <td>{{ commentaire.contenu }}</td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td>{{ commentaire.note }}</td>
+        </tr>
+        <tr>
+            <th>Created_at</th>
+            <td>{{ commentaire.createdAt ? commentaire.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Posté par</th>
+            <td>{{ commentaire.user ? commentaire.user.prenom : 'Utilisateur inconnu' }}</td>
+        </tr>
+    </tbody>
+    </table>
+
+
+    <a href="{{ path('app_commentaire_index') }}" class="btn btn-primary">Retour à la page précedente</a>
+
+    <a href="{{ path('app_commentaire_edit', {'id': commentaire.id}) }}" class="btn btn-primary">edit</a>
+
+    {{ include('commentaire/_delete_form.html.twig') }}
+{% endblock %}

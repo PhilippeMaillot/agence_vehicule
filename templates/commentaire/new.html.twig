@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Commentaire{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un commentaire</h1>
+
+{% if commentaire.vehicule %}
+    <p>Ce commentaire sera associé au véhicule : <strong>{{ commentaire.vehicule.modele }}</strong></p>
+{% endif %}
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-success">Enregistrer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('app_commentaire_index') }}" class="btn btn-primary">Retour à la liste</a>
+
+{% endblock %}

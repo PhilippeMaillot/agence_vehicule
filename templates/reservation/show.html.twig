@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation{% endblock %}
+
+{% block body %}
+    <h1>Reservation</h1>
+
+    <table class="table">
+    <tbody>
+        <tr>
+            <th>Date début</th>
+            <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Date fin</th>
+            <td>{{ reservation.endedAt ? reservation.endedAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        <tr>
+            <th>Prix Total</th>
+            <td>{{ reservation.prixTotal }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>{{ reservation.status }}</td>
+        </tr>
+        <tr>
+            <th>Utilisateur</th>
+            <td>{{ reservation.user ? reservation.user.prenom : 'Utilisateur inconnu' }}</td>
+        </tr>
+        <tr>
+            <th>Véhicule</th>
+            <td>{{ reservation.vehicule ? reservation.vehicule.modele : 'Véhicule inconnu' }}</td>
+        </tr>
+    </tbody>
+</table>
+
+    <a href="{{ path('app_reservation_index') }}" class="btn btn-primary">Retour à la page précedente</a>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_reservation_edit', {'id': reservation.id}) }}" class="btn btn-secondary">Edit</a>
+        {{ include('reservation/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}

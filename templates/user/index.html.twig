@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    {% if not is_granted('IS_AUTHENTICATED_FULLY') or not is_granted('ROLE_ADMIN') %}
+        {% set redirectUrl = path('app_vehicule_index') %}
+        <script type="text/javascript">
+            window.location.href = "{{ redirectUrl }}";
+        </script>
+    {% else %}
+        <h1>Liste des utilisateurs</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Password</th>
+                    <th>Prenom</th>
+                    <th>Nom</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>{{ user.prenom }}</td>
+                    <td>{{ user.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary">show</a>
+                        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_user_new') }}" class="btn btn-primary">Create new</a>
+    {% endif %}
+{% endblock %}

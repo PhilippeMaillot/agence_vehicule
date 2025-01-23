@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vehicule{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .comment {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .comment strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .comment .user {
+            color: #333;
+            font-weight: bold;
+        }
+        .comment .note {
+            color: #555;
+        }
+        .comment .contenu {
+            margin-top: 10px;
+        }
+        ul {
+            list-style-type: none; /* Ajoutez cette ligne pour retirer les puces */
+            padding: 0; /* Optionnel : pour retirer le padding par défaut */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h1>Vehicule</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Marque</th>
+                <td>{{ vehicule.marque }}</td>
+            </tr>
+            <tr>
+                <th>Modele</th>
+                <td>{{ vehicule.modele }}</td>
+            </tr>
+            <tr>
+                <th>Immatriculation</th>
+                <td>{{ vehicule.immatriculation }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ vehicule.type }}</td>
+            </tr>
+            <tr>
+                <th>Prixparjour</th>
+                <td>{{ vehicule.prixparjour }}</td>
+            </tr>
+            <tr>
+                <th>Disponibilite</th>
+                <td>{{ vehicule.disponibilite ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Note moyenne</th>
+                <td>{{ averageNote }}/5</td>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_vehicule_index') }}" class="btn btn-primary">Retour à la page précedente</a>
+    <a href="{{ path('app_commentaire_new', {'vehicule_id': vehicule.id}) }}" class="btn btn-primary">ajouter un commentaire</a>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}" class="btn btn-primary">Modifier</a>
+        {{ include('vehicule/_delete_form.html.twig') }}
+    {% endif %}
+
+    <h2>Commentaires</h2>
+
+    <ul>
+        {% for commentaire in vehicule.comments %}
+            <li class="comment">
+                <strong class="user">Utilisateur: {{ commentaire.user.prenom }}</strong>
+                <strong class="note">Note: {{ commentaire.note }}/5</strong>
+                <div class="contenu">{{ commentaire.contenu }}</div>
+            </li>
+        {% else %}
+            <li>Aucun commentaire pour ce véhicule.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

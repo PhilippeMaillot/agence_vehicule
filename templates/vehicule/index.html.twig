@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vehicule index{% endblock %}
+
+{% block body %}
+    <h1>Liste des vehicules</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Marque</th>
+                <th>Modele</th>
+                <th>Immatriculation</th>
+                <th>Type</th>
+                <th>Prixparjour</th>
+                <th>Disponibilite</th>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <th>actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for vehicule in vehicules %}
+            <tr>
+                <td>{{ vehicule.marque }}</td>
+                <td>{{ vehicule.modele }}</td>
+                <td>{{ vehicule.immatriculation }}</td>
+                <td>{{ vehicule.type }}</td>
+                <td>{{ vehicule.prixparjour }}</td>
+                <td>{{ vehicule.disponibilite ? 'Yes' : 'No' }}</td>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <td>
+                        <a href="{{ path('app_vehicule_show', {'id': vehicule.id}) }}" class="btn btn-primary">Voir</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_vehicule_edit', {'id': vehicule.id}) }}" class="btn btn-primary">Modifier</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('app_vehicule_new') }}" class="btn btn-primary">Ajouter un vehicule</a>
+    {% endif %}
+{% endblock %}
