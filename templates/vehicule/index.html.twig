@@ -26,7 +26,7 @@
                 <td>{{ vehicule.modele }}</td>
                 <td>{{ vehicule.immatriculation }}</td>
                 <td>{{ vehicule.type }}</td>
-                <td>{{ vehicule.prixparjour }}</td>
+                <td>{{ vehicule.prixparjour }} €</td>
                 <td>{{ vehicule.disponibilite ? 'Yes' : 'No' }}</td>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <td>

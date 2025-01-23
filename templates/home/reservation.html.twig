@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Réservations{% endblock %}
+
+{% block body %}
+    <h1 class="text-center">Mes Réservations</h1>
+
+    {% if app.user %}
+        <div class="container">
+            <div class="row">
+                {% for reservation in app.user.reservations %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <!-- Afficher l'image du véhicule -->
+                            <img src="{{ asset('img/' ~ reservation.vehicule.modele ~ '.jpg') }}" class="card-img-top" alt="{{ reservation.vehicule.marque }}">
+
+                            <div class="card-body">
+                                <!-- Informations du véhicule -->
+                                <h5 class="card-title">{{ reservation.vehicule.marque }} {{ reservation.vehicule.modele }}</h5>
+                                <p class="card-text">
+                                    <strong>Prix de la reservation :</strong> {{ reservation.prixTotal }}€ <br>
+                                    <strong>Immatriculation :</strong> {{ reservation.vehicule.immatriculation }} <br>
+                                    <strong>Type :</strong> {{ reservation.vehicule.type }}
+                                </p>
+
+                                <!-- Informations de la réservation -->
+                                <p class="card-text">
+                                    <strong>Date de début :</strong> {{ reservation.createdAt|date('d/m/Y') }} <br>
+                                    <strong>Date de fin :</strong> {{ reservation.endedAt|date('d/m/Y') }} <br>
+                                    <strong>Status :</strong> {{ reservation.status }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center">Aucune réservation trouvée.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">Veuillez vous connecter pour voir vos réservations.</p>
+    {% endif %}
+{% endblock %}

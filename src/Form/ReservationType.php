@@ -13,23 +13,31 @@ class ReservationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('ended_at', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('vehicule', EntityType::class, [
+        $builder->add('created_at', null, [
+            'widget' => 'single_text',
+        ]);
+
+        $builder->add('ended_at', null, [
+            'widget' => 'single_text',
+        ]);
+
+        // Si un véhicule est pré-sélectionné, ne pas afficher le champ "vehicule"
+        if (!$options['vehicule_fixed']) {
+            $builder->add('vehicule', EntityType::class, [
                 'class' => Vehicule::class,
-                'choice_label' => 'modele', // Affiche le modèle du véhicule
+                'choice_label' => 'modele',
+                'placeholder' => 'Sélectionnez un véhicule',
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Reservation::class,
+            'vehicule_fixed' => false, // Par défaut, le champ "vehicule" est affiché
         ]);
+
+        $resolver->setAllowedTypes('vehicule_fixed', 'bool');
     }
 }

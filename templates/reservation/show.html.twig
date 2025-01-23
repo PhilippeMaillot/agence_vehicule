@@ -29,7 +29,9 @@
         </tr>
         <tr>
             <th>Véhicule</th>
-            <td>{{ reservation.vehicule ? reservation.vehicule.modele : 'Véhicule inconnu' }}</td>
+            <td>
+                {{ reservation.vehicule ? reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele : 'Véhicule inconnu' }}
+            </td>
         </tr>
     </tbody>
 </table>

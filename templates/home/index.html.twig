@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Louer un véhicule{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .card-body {
+            text-align: center;
+        }
+        .status {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .status.available {
+            color: green;
+        }
+        .status.unavailable {
+            color: red;
+        }
+        .btn[disabled] {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h2 class="text-center my-4">Louer un véhicule</h2>
+
+    <div class="container">
+        <div class="row">
+            {% for vehicule1 in vehicule %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{ asset('img/' ~ vehicule1.modele ~ '.jpg') }}" class="card-img-top" alt="{{ vehicule1.marque }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ vehicule1.marque }} {{ vehicule1.modele }}</h5>
+                            <p class="card-text">
+                                <strong>Prix Journalier :</strong> {{ vehicule1.prixparjour }}€ <br>
+                                <span class="status {{ vehicule1.disponibilite ? 'available' : 'unavailable' }}">
+                                    {{ vehicule1.disponibilite ? '✅ Disponible' : '❌ Indisponible' }}
+                                </span>
+                            </p>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <a href="{{ path('app_reservation_new', {'id': vehicule1.id}) }}" 
+                                    class="btn btn-primary {{ not vehicule1.disponibilite ? 'disabled' : '' }}" 
+                                    {% if not vehicule1.disponibilite %}disabled onclick="return false;"{% endif %}>
+                                    Réserver
+                                </a>
+                                <a href="{{ path('app_vehicule_show', {'id': vehicule1.id}) }}" class="btn btn-secondary">Voir</a>
+                            {% else %}
+                                <p>Veuillez vous connecter pour réserver un véhicule.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if loop.index is divisible by(4) and not loop.last %}
+                    </div><div class="row">
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
