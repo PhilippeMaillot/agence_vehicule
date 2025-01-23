@@ -80,9 +80,16 @@ public function new(Request $request, EntityManagerInterface $entityManager, Veh
 
     if ($form->isSubmitted() && $form->isValid()) {
         $duration = $reservation->getCreatedAt()->diff($reservation->getEndedAt())->days;
-        $reservation->setPrixTotal($reservation->getVehicule()->getPrixparjour() * $duration);
+        $prixTotal = $reservation->getVehicule()->getPrixparjour() * $duration;
+    
+        // Appliquer une réduction de 10 % si le prix total dépasse 400€
+        if ($prixTotal > 400) {
+            $prixTotal = $prixTotal * 0.9; // Réduction de 10 %
+        }
+    
+        $reservation->setPrixTotal($prixTotal);
         $reservation->setUser($this->getUser());
-
+    
         $now = new \DateTimeImmutable();
         if ($now >= $reservation->getCreatedAt() && $now <= $reservation->getEndedAt()) {
             $reservation->setStatus('En cours');
@@ -95,12 +102,12 @@ public function new(Request $request, EntityManagerInterface $entityManager, Veh
         } elseif ($now < $reservation->getCreatedAt()) {
             $reservation->setStatus('En attente');
         }
-
+    
         $entityManager->persist($reservation);
         $entityManager->flush();
-
-        return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
-    }
+    
+        return $this->redirectToRoute('app_home_reservation', [], Response::HTTP_SEE_OTHER);
+    }    
 
     return $this->render('reservation/new.html.twig', [
         'reservation' => $reservation,
@@ -122,10 +129,17 @@ public function new(Request $request, EntityManagerInterface $entityManager, Veh
     {
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $duration = $reservation->getCreatedAt()->diff($reservation->getEndedAt())->days;
-            $reservation->setPrixTotal($reservation->getVehicule()->getPrixparjour() * $duration);
+            $prixTotal = $reservation->getVehicule()->getPrixparjour() * $duration;
+        
+            // Appliquer une réduction de 10 % si le prix total dépasse 400€
+            if ($prixTotal > 400) {
+                $prixTotal = $prixTotal * 0.9; // Réduction de 10 %
+            }
+        
+            $reservation->setPrixTotal($prixTotal);
+        
             $now = new \DateTimeImmutable();
             if ($now >= $reservation->getCreatedAt() && $now <= $reservation->getEndedAt()) {
                 $reservation->setStatus('En cours');
@@ -146,10 +160,11 @@ public function new(Request $request, EntityManagerInterface $entityManager, Veh
                     $vehicule->setDisponibilite(true);
                 }
             }
+        
             $entityManager->flush();
-
+        
             return $this->redirectToRoute('app_reservation_index', [], Response::HTTP_SEE_OTHER);
-        }
+        }        
 
         return $this->render('reservation/edit.html.twig', [
             'reservation' => $reservation,

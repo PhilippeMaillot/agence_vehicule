@@ -9,3 +9,30 @@
 
     <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à la page précedente</a>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDateField = document.querySelector('[name="reservation[created_at]"]');
+            const endDateField = document.querySelector('[name="reservation[ended_at]"]');
+
+            if (startDateField && endDateField) {
+                startDateField.addEventListener('change', function () {
+                    const startDate = new Date(this.value);
+
+                    if (!isNaN(startDate.getTime())) {
+                        // Met à jour la date minimale pour le champ "ended_at"
+                        endDateField.setAttribute('min', startDate.toISOString().split('T')[0]);
+
+                        // Réinitialise la date de fin si elle est antérieure à la date de début
+                        const endDate = new Date(endDateField.value);
+                        if (endDate < startDate) {
+                            endDateField.value = '';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}

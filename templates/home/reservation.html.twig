@@ -18,7 +18,12 @@
                                 <!-- Informations du véhicule -->
                                 <h5 class="card-title">{{ reservation.vehicule.marque }} {{ reservation.vehicule.modele }}</h5>
                                 <p class="card-text">
-                                    <strong>Prix de la reservation :</strong> {{ reservation.prixTotal }}€ <br>
+                                    <strong>Prix de la réservation :</strong> {{ reservation.prixTotal }}€ 
+                                    {% set prixSansReduction = reservation.vehicule.prixparjour * reservation.createdAt.diff(reservation.endedAt).days %}
+                                    {% if reservation.prixTotal < prixSansReduction %}
+                                        <br><em>(Une réduction de 10% a été appliquée)</em>
+                                    {% endif %}
+                                    <br>
                                     <strong>Immatriculation :</strong> {{ reservation.vehicule.immatriculation }} <br>
                                     <strong>Type :</strong> {{ reservation.vehicule.type }}
                                 </p>

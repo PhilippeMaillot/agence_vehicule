@@ -6,35 +6,40 @@
     <h1>Reservation</h1>
 
     <table class="table">
-    <tbody>
-        <tr>
-            <th>Date début</th>
-            <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Date fin</th>
-            <td>{{ reservation.endedAt ? reservation.endedAt|date('Y-m-d H:i:s') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Prix Total</th>
-            <td>{{ reservation.prixTotal }}</td>
-        </tr>
-        <tr>
-            <th>Status</th>
-            <td>{{ reservation.status }}</td>
-        </tr>
-        <tr>
-            <th>Utilisateur</th>
-            <td>{{ reservation.user ? reservation.user.prenom : 'Utilisateur inconnu' }}</td>
-        </tr>
-        <tr>
-            <th>Véhicule</th>
-            <td>
-                {{ reservation.vehicule ? reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele : 'Véhicule inconnu' }}
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <tbody>
+            <tr>
+                <th>Date début</th>
+                <td>{{ reservation.createdAt ? reservation.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date fin</th>
+                <td>{{ reservation.endedAt ? reservation.endedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Prix Total</th>
+                <td>
+                    {{ reservation.prixTotal }} €
+                    {% if reservation.prixTotal / reservation.vehicule.prixparjour / reservation.createdAt.diff(reservation.endedAt).days < 1 %}
+                        <br><em>(Une réduction de 10% a été appliquée)</em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ reservation.status }}</td>
+            </tr>
+            <tr>
+                <th>Utilisateur</th>
+                <td>{{ reservation.user ? reservation.user.prenom : 'Utilisateur inconnu' }}</td>
+            </tr>
+            <tr>
+                <th>Véhicule</th>
+                <td>
+                    {{ reservation.vehicule ? reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele : 'Véhicule inconnu' }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <a href="{{ path('app_reservation_index') }}" class="btn btn-primary">Retour à la page précedente</a>
 

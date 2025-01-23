@@ -111,6 +111,10 @@ class Vehicule
 
     public function setPrixparjour(float $prixparjour): static
     {
+        if ($prixparjour < 20 || $prixparjour > 50) {
+            throw new \InvalidArgumentException('Le prix par jour doit être compris entre 20 et 50.');
+        }
+
         $this->prixparjour = $prixparjour;
 
         return $this;

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -14,9 +15,15 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\GreaterThanOrEqual(
+        propertyPath: 'created_at',
+        message: 'La date de fin doit être postérieure ou égale à la date de début.'
+    )]
     private ?\DateTimeImmutable $ended_at = null;
 
     #[ORM\Column]
